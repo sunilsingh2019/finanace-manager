@@ -46,22 +46,20 @@ func main() {
 	// Public routes
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(200, "layout.html", gin.H{
-			"title": "Welcome",
+			"title":    "Welcome",
 			"template": "index.html",
 		})
 	})
 
 	router.GET("/login", func(c *gin.Context) {
-		c.HTML(200, "layout.html", gin.H{
+		c.HTML(200, "login.html", gin.H{
 			"title": "Login",
-			"template": "login.html",
 		})
 	})
 
 	router.GET("/register", func(c *gin.Context) {
-		c.HTML(200, "layout.html", gin.H{
+		c.HTML(200, "register.html", gin.H{
 			"title": "Register",
-			"template": "register.html",
 		})
 	})
 

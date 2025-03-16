@@ -245,34 +245,69 @@ function processCategoryData(transactions) {
 }
 
 // Event Listeners
+// Form validation and submission handlers
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            login(username, password);
+            const username = loginForm.querySelector('#username').value;
+            const password = loginForm.querySelector('#password').value;
+            await login(username, password);
         });
     }
 
-    const registerForm = document.getElementById('registerForm');
     if (registerForm) {
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
+            const username = registerForm.querySelector('#username').value;
+            const email = registerForm.querySelector('#email').value;
+            const password = registerForm.querySelector('#password').value;
+            const confirmPassword = registerForm.querySelector('#confirmPassword').value;
+
+            // Clear previous errors
+            hideError('registerError');
+
+            // Validate password match
             if (password !== confirmPassword) {
                 showError('registerError', 'Passwords do not match');
                 return;
             }
-            
-            register(username, email, password);
+
+            // Validate password strength
+            if (password.length < 6) {
+                showError('registerError', 'Password must be at least 6 characters long');
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('registerError', 'Please enter a valid email address');
+                return;
+            }
+
+            await register(username, email, password);
         });
     }
+});
+
+function showError(elementId, message) {
+    const errorElement = document.getElementById(elementId);
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.remove('d-none');
+    }
+}
+
+function hideError(elementId) {
+    const errorElement = document.getElementById(elementId);
+    if (errorElement) {
+        errorElement.classList.add('d-none');
+    }
+}
 
     const saveTransactionBtn = document.getElementById('saveTransaction');
     if (saveTransactionBtn) {

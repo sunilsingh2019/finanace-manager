@@ -31,6 +31,29 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
+	// Check if username already exists
+	var exists bool
+	err := h.db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username = $1)", input.Username).Scan(&exists)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error checking username"})
+		return
+	}
+	if exists {
+		c.JSON(http.StatusConflict, gin.H{"error": "Username already taken"})
+		return
+	}
+
+	// Check if email already exists
+	err = h.db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)", input.Email).Scan(&exists)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error checking email"})
+		return
+	}
+	if exists {
+		c.JSON(http.StatusConflict, gin.H{"error": "Email already registered"})
+		return
+	}
+
 	user, err := models.NewUser(input.Username, input.Email, input.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating user"})
@@ -62,15 +85,31 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	}
 
 	var user models.User
-	err := h.db.QueryRow("SELECT id, username, email, password FROM users WHERE username = $1", input.Username).
-		Scan(&user.ID, &user.Username, &user.Email, &user.Password)
+	var loginAttempts int
 
-	if err == sql.ErrNoRows {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+	// Check for too many failed login attempts
+	err := h.db.QueryRow("SELECT COUNT(*) FROM failed_logins WHERE username = $1 AND attempt_time > NOW() - INTERVAL '15 minutes'", input.Username).Scan(&loginAttempts)
+	if err != nil && err != sql.ErrNoRows {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error checking login attempts"})
 		return
 	}
 
-	if !user.CheckPassword(input.Password) {
+	if loginAttempts >= 5 {
+		c.JSON(http.StatusTooManyRequests, gin.H{"error": "Too many failed login attempts. Please try again later"})
+		return
+	}
+
+	err = h.db.QueryRow("SELECT id, username, email, password FROM users WHERE username = $1", input.Username).
+		Scan(&user.ID, &user.Username, &user.Email, &user.Password)
+
+	if err == sql.ErrNoRows || !user.CheckPassword(input.Password) {
+		// Record failed login attempt
+		_, err = h.db.Exec("INSERT INTO failed_logins (username, attempt_time) VALUES ($1, NOW())", input.Username)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error recording login attempt"})
+			return
+		}
+
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}

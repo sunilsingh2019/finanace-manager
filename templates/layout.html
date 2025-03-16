@@ -45,11 +45,7 @@
     </nav>
 
     <div class="container mt-4">
-        {{ if .template }}
-            {{ template .template . }}
-        {{ else }}
-            {{ template "content" . }}
-        {{ end }}
+        {{ template "content" . }}
     </div>
 
     <footer class="footer mt-auto py-3 bg-light">

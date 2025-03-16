@@ -13,7 +13,8 @@ services:
       - DB_PORT=5432
       - JWT_SECRET=your_jwt_secret_key
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - finance-network
 
@@ -29,6 +30,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - finance-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

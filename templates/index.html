@@ -1,73 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .title }}</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <h1>Personal Finance Manager</h1>
+{{ define "content" }}
+<div class="row align-items-center">
+    <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-4">Take Control of Your Finances</h1>
+        <p class="lead mb-4">Track your income and expenses, analyze your spending patterns, and make informed financial decisions with our easy-to-use personal finance manager.</p>
+        <div class="d-grid gap-2 d-md-flex">
+            <a href="/register" class="btn btn-primary btn-lg px-4">Get Started</a>
+            <a href="/login" class="btn btn-outline-primary btn-lg px-4">Login</a>
         </div>
-    </nav>
-
-    {{ define "content" }}
-    <div class="container py-5">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Take Control of Your Finances</h1>
-                <p class="lead mb-4">Track your income and expenses, analyze your spending patterns, and make informed financial decisions with our easy-to-use personal finance manager.</p>
-                <div class="d-grid gap-2 d-md-flex">
-                    <a href="/register" class="btn btn-primary btn-lg px-4">Get Started</a>
-                    <a href="/login" class="btn btn-outline-primary btn-lg px-4">Login</a>
+    </div>
+    <div class="col-lg-6 mt-5 mt-lg-0">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-graph-up text-primary fs-3"></i>
+                        <h5 class="card-title mt-3">Track Finances</h5>
+                        <p class="card-text">Monitor your income and expenses in real-time with intuitive dashboards.</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-6 mt-5 mt-lg-0">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <i class="bi bi-graph-up text-primary fs-3"></i>
-                                <h5 class="card-title mt-3">Track Finances</h5>
-                                <p class="card-text">Monitor your income and expenses in real-time with intuitive dashboards.</p>
-                            </div>
-                        </div>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-pie-chart text-primary fs-3"></i>
+                        <h5 class="card-title mt-3">Analyze Spending</h5>
+                        <p class="card-text">Visualize your spending patterns with beautiful charts and graphs.</p>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <i class="bi bi-pie-chart text-primary fs-3"></i>
-                                <h5 class="card-title mt-3">Analyze Spending</h5>
-                                <p class="card-text">Visualize your spending patterns with beautiful charts and graphs.</p>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-check text-primary fs-3"></i>
+                        <h5 class="card-title mt-3">Plan Ahead</h5>
+                        <p class="card-text">Set budgets and financial goals to better manage your money.</p>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <i class="bi bi-calendar-check text-primary fs-3"></i>
-                                <h5 class="card-title mt-3">Plan Ahead</h5>
-                                <p class="card-text">Set budgets and financial goals to better manage your money.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <i class="bi bi-shield-check text-primary fs-3"></i>
-                                <h5 class="card-title mt-3">Secure & Private</h5>
-                                <p class="card-text">Your financial data is encrypted and stored securely.</p>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-shield-check text-primary fs-3"></i>
+                        <h5 class="card-title mt-3">Secure & Private</h5>
+                        <p class="card-text">Your financial data is encrypted and stored securely.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {{ end }}
-
-    <script src="/static/js/main.js"></script>
-</body>
-</html>
+</div>
+{{ end }}
